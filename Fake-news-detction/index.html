@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="detective.png" type="image/png">
+    <title>Fake News Detective 🕵️‍♂️</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f1c40f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #74ebd5, #9face6); /* Gradient background */
+            color: var(--primary-color);
+        }
+
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .analysis-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .analyze-btn {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .analyze-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .analyze-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            display: none;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .genuine {
+            background: rgba(46, 204, 113, 0.1);
+            border: 2px solid var(--success-color);
+        }
+
+        .fake {
+            background: rgba(231, 76, 60, 0.1);
+            border: 2px solid var(--danger-color);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .result-icon {
+            font-size: 1.5rem;
+        }
+
+        .error {
+            background: rgba(241, 196, 15, 0.1);
+            border: 2px solid var(--warning-color);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: none;
+            animation: shake 0.5s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .confidence-bar {
+            margin-top: 1rem;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .confidence-level {
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+
+        .genuine .confidence-level {
+            background: var(--success-color);
+        }
+
+        .fake .confidence-level {
+            background: var(--danger-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕵️‍♂️ Fake News Detective</h1>
+            <p>Analyze news articles and detect potential misinformation using AI</p>
+        </div>
+
+        <div class="analysis-box">
+            <div class="input-group">
+                <label for="newsText">📰 Enter News Article</label>
+                <textarea
+                    id="newsText"
+                    placeholder="Paste the news article or text here to analyze its authenticity..."
+                ></textarea>
+            </div>
+
+            <button id="analyzeBtn" class="analyze-btn" onclick="analyzeText()">
+                <span id="btnText">Analyze Text</span>
+            </button>
+
+            <div id="loading" class="loading">
+                <div class="loading-spinner"></div>
+                <span>Analyzing content... Please wait</span>
+            </div>
+
+            <div id="result" class="result">
+                <div class="result-header">
+                    <span class="result-icon"></span>
+                    <h3 class="result-title"></h3>
+                </div>
+                <p class="result-message"></p>
+                <div class="confidence-bar">
+                    <div class="confidence-level"></div>
+                </div>
+            </div>
+
+            <div id="error" class="error"></div>
+        </div>
+    </div>
+
+    <script>
+        const newsText = document.getElementById('newsText');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const error = document.getElementById('error');
+        const btnText = document.getElementById('btnText');
+
+        async function analyzeText() {
+            const text = newsText.value.trim();
+
+            if (!text) {
+                showError('Please enter some text to analyze.');
+                return;
+            }
+
+            // Show loading state
+            loading.style.display = 'flex';
+            result.style.display = 'none';
+            error.style.display = 'none';
+            analyzeBtn.disabled = true;
+            btnText.textContent = 'Analyzing...';
+
+            try {
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                showResult(data.prediction, data.confidence || 0.85); // Fallback confidence if not provided
+            } catch (err) {
+                showError('Error analyzing text. Please try again later.');
+                console.error('Error:', err);
+            } finally {
+                loading.style.display = 'none';
+                analyzeBtn.disabled = false;
+                btnText.textContent = 'Analyze Text';
+            }
+        }
+
+        function showResult(prediction, confidence) {
+            result.style.display = 'block';
+            result.className = 'result ' + (prediction ? 'fake' : 'genuine');
+
+            const confidencePercent = (confidence * 100).toFixed(1);
+            const resultIcon = prediction ? '⚠️' : '✅';
+            const resultTitle = prediction ? 'Potential Fake News Detected' : 'Likely Genuine News';
+            const resultMessage = prediction
+                ? `Our analysis suggests this content might be fake news (${confidencePercent}% confidence). Please verify from reliable sources.`
+                : `Our analysis suggests this content is likely to be genuine (${confidencePercent}% confidence). However, always cross-verify important information.`;
+
+            result.querySelector('.result-icon').textContent = resultIcon;
+            result.querySelector('.result-title').textContent = resultTitle;
+            result.querySelector('.result-message').textContent = resultMessage;
+
+            // Animate confidence bar
+            const confidenceBar = result.querySelector('.confidence-level');
+            confidenceBar.style.width = '0%';
+            setTimeout(() => {
+                confidenceBar.style.width = `${confidencePercent}%`;
+            }, 100);
+        }
+
+        function showError(message) {
+            error.style.display = 'block';
+            error.textContent = message;
+        }
+
+        // Enable/disable button based on input
+        newsText.addEventListener('input', () => {
+            analyzeBtn.disabled = !newsText.value.trim();
+        });
+
+        // Add placeholder animation
+        const placeholders = [
+            "Paste the news article here...",
+            "Enter the text you want to verify...",
+            "Input the content for fact-checking...",
+            "Share the news story here..."
+        ];
+        let placeholderIndex = 0;
+
+        setInterval(() => {
+            newsText.setAttribute('placeholder', placeholders[placeholderIndex]);
+            placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+        }, 3000);
+    </script>
+</body>
+</html>
