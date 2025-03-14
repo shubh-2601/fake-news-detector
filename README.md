@@ -3,7 +3,11 @@ Overview
 In today's digital world, misinformation spreads rapidly. This Fake News Detection System helps classify whether a news article is real or fake using Logistic Regression, a widely used machine learning algorithm for binary classification.
 
 Features
-✅ Detects fake and real news using Natural Language Processing (NLP) techniques ✅ Built using Logistic Regression for efficient classification ✅ User-friendly Web UI with HTML, CSS, and JavaScript ✅ Uses TF-IDF Vectorization to process textual data ✅ Trained on a real-world dataset for high accuracy
+✅ Detects fake and real news using Natural Language Processing (NLP) techniques 
+✅ Built using Logistic Regression for efficient classification 
+✅ User-friendly Web UI with HTML, CSS, and JavaScript 
+✅ Uses TF-IDF Vectorization to process textual data 
+✅ Trained on a real-world dataset for high accuracy
 
 Tech Stack
 Machine Learning: Python, scikit-learn, Pandas, NumPy NLP: TF-IDF (Term Frequency - Inverse Document Frequency) Frontend: HTML, CSS, JavaScript
